@@ -7,18 +7,22 @@ from PIL import ImageTk,Image
 import numpy as np
 
 
-
-
-def button1_clicked(videoloop_stop):
-    threading.Thread(target=videoLoop, args=(videoloop_stop,)).start()
-
-def button2_clicked(videoloop_stop):
-    videoloop_stop[0] = True
+def switch():
+    global is_on
+    if is_on:
+        start_button.config(image=stop)
+        threading.Thread(target=videoLoop, args=(videoloop_stop,)).start()
+        is_on=False
+    else:
+        start_button.config(image=start)
+        videoloop_stop[0] = True
+        is_on=True
 
 def videoLoop(self):
     cap = cv2.VideoCapture(0)
-    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 800)
-    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 600)
+    cap.set(3, 300)
+    cap.set(4, 400)
+   
 
     fps = FPS().start()
     _, prev = cap.read()
@@ -43,7 +47,7 @@ def videoLoop(self):
         image = ImageTk.PhotoImage(image)
         panel = tk.Label(image=image)
         panel.image = image
-        panel.place(x=50, y=50)
+        panel.place(x=350, y=125)
 
         prev = new
         _, new = cap.read()
@@ -67,31 +71,41 @@ def videoLoop(self):
 videoloop_stop = [False]
 
 root = tk.Tk()
-root.geometry("1920x1080+0+0")
+root.resizable(0,0)
+root.geometry("790x400+10+10")
+root.configure(background="white")
+
+
+is_on = True
+
+start = PhotoImage(file = "START.png")
+stop = PhotoImage(file = "STOP.png")
+
 
 f1 = Frame(root, bg="white")
 f1.place(relwidth=1, relheight=1)
-label = Label(f1, text="R O S A - Hv", font=("comicsansms", " 68", "bold"), fg="#FFC0CB", background="white")
-label.place(relx=-0.25, relwidth=1.5, relheight=0.2)
+label=Label(f1,text="R O S A - Hv",font=("calibrie"," 68"),fg="#ffc0cb",background="white")
+label.place(relx=-0.25,relwidth=1.5,relheight=0.2)
 
-button1 = tk.Button(
-    root, text = "Start", bg="#fff", font=("", 50),
-    command=lambda: button1_clicked(videoloop_stop))
-path1 = "START.png"
-img1 = ImageTk.PhotoImage(Image.open(path1))
-my1 = Label(root, image=img1)
-my1.image = img1
-button1.config(image=img1)
-button1.place(x=1000, y=150, width = 300, height = 100)
+
+start_button= Button(
+    root, image = start, bg="#fff", font=("", 50),
+    command= switch) 
+#path1 = "START.png"
+#img1 = ImageTk.PhotoImage(Image.open(path1))
+#my1 = Label(root, image=img1)
+#my1.image = img1
+#button1.config(image=img1)
+start_button.place(relx=0.11,rely=0.25,relwidth=0.2,relheight=0.15)
 
 button2 = tk.Button(
     root, text = "Setup", bg="#fff", font=("", 50))
-path2 = "SETUP.png"
+path2 = "SetUp.png"
 img2 = ImageTk.PhotoImage(Image.open(path2))
 my2 = Label(root, image=img2)
 my2.image = img2
 button2.config(image=img2)
-button2.place(x=1000, y=250, width = 300, height = 100)
+button2.place(relx=0.11,rely=0.40,relwidth=0.2,relheight=0.15)
 
 button3 = tk.Button(
     root, text = "tools", bg="#fff", font=("", 50))
@@ -100,7 +114,7 @@ img3 = ImageTk.PhotoImage(Image.open(path3))
 my3 = Label(root, image=img3)
 my3.image = img3
 button3.config(image=img3)
-button3.place(x=1000, y=350, width = 300, height = 100)
+button3.place(relx=0.11,rely=0.55,relwidth=0.2,relheight=0.15)
 
 button4 = tk.Button(
     root, text = "help", bg="#fff", font=("", 50))
@@ -109,18 +123,7 @@ img4 = ImageTk.PhotoImage(Image.open(path4))
 my4 = Label(root, image=img4)
 my4.image = img4
 button4.config(image=img4)
-button4.place(x=1000, y=450, width = 300, height = 100)
-
-button5 = tk.Button(
-    root, text = "Stop", bg="#fff", font=("", 50),
-    command=lambda: button2_clicked(videoloop_stop))
-path5 = "STOP.png"
-img5 = ImageTk.PhotoImage(Image.open(path5))
-my5 = Label(root, image=img5)
-my5.image = img5
-button5.config(image=img5)
-button5.place(x=1000, y=550, width = 300, height = 100)
-
+button4.place(relx=0.11,rely=0.70,relwidth=0.2,relheight=0.15)
 
 
 
